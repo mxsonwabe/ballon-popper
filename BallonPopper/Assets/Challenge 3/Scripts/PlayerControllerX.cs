@@ -64,6 +64,10 @@ public class PlayerControllerX : MonoBehaviour
       gameOver = true;
       Debug.Log("Game Over!");
       Destroy(other.gameObject);
+
+      //Destroy(gameObject, 2.5f);
+      // wait for particle effect to end
+      StartCoroutine(DestroyAfterEffect());
     }
 
     // if player collides with money, fireworks
@@ -72,9 +76,14 @@ public class PlayerControllerX : MonoBehaviour
       fireworksParticle.Play();
       playerAudio.PlayOneShot(moneySound, 1.0f);
       Destroy(other.gameObject);
-
     }
+  }
 
+  IEnumerator DestroyAfterEffect()
+  {
+    // wait until all explosion particle objects are no-longer in the scene
+    yield return new WaitUntil(() =>  !explosionParticle.IsAlive());
+    Destroy(gameObject);
   }
 
 }
